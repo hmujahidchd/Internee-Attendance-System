@@ -46,6 +46,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Rotativa, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Rotativa.1.7.3\lib\net461\Rotativa.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -152,21 +155,28 @@
     <Content Include="Content\css\addons\flag.min.css" />
     <Content Include="Content\css\addons\jquery.zmd.hierarchical-display.min.css" />
     <Content Include="Content\css\addons\rating.min.css" />
+    <Content Include="Content\css\all.css" />
     <Content Include="Content\css\bootstrap.css" />
     <Content Include="Content\css\bootstrap.min.css" />
     <Content Include="Content\css\bootstrap4-neon-glow.css" />
     <Content Include="Content\css\bootstrap4-neon-glow.min.css" />
+    <Content Include="Content\css\hack.min.css" />
     <Content Include="Content\css\mdb.css" />
     <Content Include="Content\css\mdb.lite.css" />
     <Content Include="Content\css\mdb.lite.min.css" />
     <Content Include="Content\css\mdb.min.css" />
     <Content Include="Content\css\modules\animations-extended.min.css" />
     <Content Include="Content\css\style.css" />
+    <Content Include="Content\css\styles.css" />
     <Content Include="Content\images\ng-background-dot.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Rotativa\help-wkhtmltoimage.txt" />
+    <Content Include="Rotativa\help-wkhtmltopdf.txt" />
+    <Content Include="Rotativa\wkhtmltoimage.exe" />
+    <Content Include="Rotativa\wkhtmltopdf.exe" />
     <Content Include="Scripts\bootbox.all.js" />
     <Content Include="Scripts\bootbox.all.min.js" />
     <Content Include="Scripts\bootbox.js" />
@@ -186,6 +196,7 @@
     <Content Include="Content\css\mdb.lite.min.css.map" />
     <Content Include="Content\css\mdb.min.css.map" />
     <Content Include="Content\css\modules\animations-extended.min.css.map" />
+    <Content Include="App_Browsers\qt.browser" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -254,7 +265,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Helper_Class\" />
     <Folder Include="Models\" />
+    <Folder Include="ViewModel\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
@@ -268,6 +281,12 @@
     <None Include="packages.config" />
     <Content Include="Scripts\jquery-3.4.1.slim.min.map" />
     <Content Include="Scripts\jquery-3.4.1.min.map" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DataAccessLayer\DataAccessLayer.csproj">
+      <Project>{97d833ca-67fb-49f0-80c9-f8b46b021521}</Project>
+      <Name>DataAccessLayer</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

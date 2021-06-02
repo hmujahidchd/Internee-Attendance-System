@@ -83,3 +83,8 @@ E:\GitHub\hmujahidchd\Internee-Attendance-System\IAS\IAS\obj\Debug\IAS.csproj.Co
 E:\GitHub\hmujahidchd\Internee-Attendance-System\IAS\IAS\obj\Debug\IAS.csproj.CopyComplete
 E:\GitHub\hmujahidchd\Internee-Attendance-System\IAS\IAS\obj\Debug\IAS.dll
 E:\GitHub\hmujahidchd\Internee-Attendance-System\IAS\IAS\obj\Debug\IAS.pdb
+E:\GitHub\hmujahidchd\Internee-Attendance-System\IAS\IAS\bin\DataAccessLayer.dll
+E:\GitHub\hmujahidchd\Internee-Attendance-System\IAS\IAS\bin\EntityFramework.dll
+E:\GitHub\hmujahidchd\Internee-Attendance-System\IAS\IAS\bin\DataAccessLayer.pdb
+E:\GitHub\hmujahidchd\Internee-Attendance-System\IAS\IAS\bin\DataAccessLayer.dll.config
+E:\GitHub\hmujahidchd\Internee-Attendance-System\IAS\IAS\bin\EntityFramework.xml

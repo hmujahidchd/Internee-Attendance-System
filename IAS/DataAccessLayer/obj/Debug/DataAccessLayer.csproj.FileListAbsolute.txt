@@ -1,0 +1,11 @@
+E:\GitHub\hmujahidchd\Internee-Attendance-System\IAS\DataAccessLayer\bin\Debug\DataAccessLayer.dll.config
+E:\GitHub\hmujahidchd\Internee-Attendance-System\IAS\DataAccessLayer\bin\Debug\DataAccessLayer.dll
+E:\GitHub\hmujahidchd\Internee-Attendance-System\IAS\DataAccessLayer\bin\Debug\DataAccessLayer.pdb
+E:\GitHub\hmujahidchd\Internee-Attendance-System\IAS\DataAccessLayer\bin\Debug\EntityFramework.dll
+E:\GitHub\hmujahidchd\Internee-Attendance-System\IAS\DataAccessLayer\bin\Debug\EntityFramework.SqlServer.dll
+E:\GitHub\hmujahidchd\Internee-Attendance-System\IAS\DataAccessLayer\bin\Debug\EntityFramework.xml
+E:\GitHub\hmujahidchd\Internee-Attendance-System\IAS\DataAccessLayer\bin\Debug\EntityFramework.SqlServer.xml
+E:\GitHub\hmujahidchd\Internee-Attendance-System\IAS\DataAccessLayer\obj\Debug\DataAccessLayer.csproj.CoreCompileInputs.cache
+E:\GitHub\hmujahidchd\Internee-Attendance-System\IAS\DataAccessLayer\obj\Debug\DataAccessLayer.csproj.CopyComplete
+E:\GitHub\hmujahidchd\Internee-Attendance-System\IAS\DataAccessLayer\obj\Debug\DataAccessLayer.dll
+E:\GitHub\hmujahidchd\Internee-Attendance-System\IAS\DataAccessLayer\obj\Debug\DataAccessLayer.pdb

@@ -1,0 +1,198 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="IASDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="attendancestatustable">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="status" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="attendancetables" Relationship="Self.FK_attendancetable_attendancestatus" FromRole="attendancestatustable" ToRole="attendancetable" />
+  </EntityType>
+  <EntityType Name="attendancetable">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="interneeid" Type="Int32" Nullable="false" />
+    <Property Name="reportDatetime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="leaveDatetime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="statusid" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="attendancestatustable" Relationship="Self.FK_attendancetable_attendancestatus" FromRole="attendancetable" ToRole="attendancestatustable" />
+    <NavigationProperty Name="interneetable" Relationship="Self.FK_attendancetable_interneetable" FromRole="attendancetable" ToRole="interneetable" />
+  </EntityType>
+  <EntityType Name="batchtable">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="batch" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="sponsor" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="interneetables" Relationship="Self.FK_interneetable_batchtable" FromRole="batchtable" ToRole="interneetable" />
+  </EntityType>
+  <EntityType Name="interneetable">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="batchid" Type="Int32" Nullable="false" />
+    <Property Name="userid" Type="Int32" Nullable="false" />
+    <Property Name="supervisorid" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="attendancetables" Relationship="Self.FK_attendancetable_interneetable" FromRole="interneetable" ToRole="attendancetable" />
+    <NavigationProperty Name="batchtable" Relationship="Self.FK_interneetable_batchtable" FromRole="interneetable" ToRole="batchtable" />
+    <NavigationProperty Name="supervisortable" Relationship="Self.FK_interneetable_superisourtable" FromRole="interneetable" ToRole="supervisortable" />
+    <NavigationProperty Name="usertable" Relationship="Self.FK_interneetable_usertable" FromRole="interneetable" ToRole="usertable" />
+  </EntityType>
+  <EntityType Name="managerstable">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="userid" Type="Int32" Nullable="false" />
+    <Property Name="designation" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="usertable" Relationship="Self.FK_ManagersTable_usertable" FromRole="managerstable" ToRole="usertable" />
+  </EntityType>
+  <EntityType Name="supervisortable">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="userid" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="interneetables" Relationship="Self.FK_interneetable_superisourtable" FromRole="supervisortable" ToRole="interneetable" />
+    <NavigationProperty Name="usertable" Relationship="Self.FK_superisourtable_usertable" FromRole="supervisortable" ToRole="usertable" />
+  </EntityType>
+  <EntityType Name="usertable">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="username" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="email" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="password" Type="String" MaxLength="64" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="fname" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="cnic" Type="String" MaxLength="15" FixedLength="false" Unicode="true" Nullable="false" />
+    <NavigationProperty Name="interneetables" Relationship="Self.FK_interneetable_usertable" FromRole="usertable" ToRole="interneetable" />
+    <NavigationProperty Name="managerstables" Relationship="Self.FK_ManagersTable_usertable" FromRole="usertable" ToRole="managerstable" />
+    <NavigationProperty Name="supervisortables" Relationship="Self.FK_superisourtable_usertable" FromRole="usertable" ToRole="supervisortable" />
+  </EntityType>
+  <Association Name="FK_attendancetable_attendancestatus">
+    <End Role="attendancestatustable" Type="Self.attendancestatustable" Multiplicity="1" />
+    <End Role="attendancetable" Type="Self.attendancetable" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="attendancestatustable">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="attendancetable">
+        <PropertyRef Name="statusid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_attendancetable_interneetable">
+    <End Role="interneetable" Type="Self.interneetable" Multiplicity="1" />
+    <End Role="attendancetable" Type="Self.attendancetable" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="interneetable">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="attendancetable">
+        <PropertyRef Name="interneeid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_interneetable_batchtable">
+    <End Role="batchtable" Type="Self.batchtable" Multiplicity="1" />
+    <End Role="interneetable" Type="Self.interneetable" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="batchtable">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="interneetable">
+        <PropertyRef Name="batchid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_interneetable_superisourtable">
+    <End Role="supervisortable" Type="Self.supervisortable" Multiplicity="1" />
+    <End Role="interneetable" Type="Self.interneetable" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="supervisortable">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="interneetable">
+        <PropertyRef Name="supervisorid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_interneetable_usertable">
+    <End Role="usertable" Type="Self.usertable" Multiplicity="1" />
+    <End Role="interneetable" Type="Self.interneetable" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="usertable">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="interneetable">
+        <PropertyRef Name="userid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ManagersTable_usertable">
+    <End Role="usertable" Type="Self.usertable" Multiplicity="1" />
+    <End Role="managerstable" Type="Self.managerstable" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="usertable">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="managerstable">
+        <PropertyRef Name="userid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_superisourtable_usertable">
+    <End Role="usertable" Type="Self.usertable" Multiplicity="1" />
+    <End Role="supervisortable" Type="Self.supervisortable" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="usertable">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="supervisortable">
+        <PropertyRef Name="userid" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="IASDBEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="attendancestatustables" EntityType="Self.attendancestatustable" />
+    <EntitySet Name="attendancetables" EntityType="Self.attendancetable" />
+    <EntitySet Name="batchtables" EntityType="Self.batchtable" />
+    <EntitySet Name="interneetables" EntityType="Self.interneetable" />
+    <EntitySet Name="managerstables" EntityType="Self.managerstable" />
+    <EntitySet Name="supervisortables" EntityType="Self.supervisortable" />
+    <EntitySet Name="usertables" EntityType="Self.usertable" />
+    <AssociationSet Name="FK_attendancetable_attendancestatus" Association="Self.FK_attendancetable_attendancestatus">
+      <End Role="attendancestatustable" EntitySet="attendancestatustables" />
+      <End Role="attendancetable" EntitySet="attendancetables" />
+    </AssociationSet>
+    <AssociationSet Name="FK_attendancetable_interneetable" Association="Self.FK_attendancetable_interneetable">
+      <End Role="interneetable" EntitySet="interneetables" />
+      <End Role="attendancetable" EntitySet="attendancetables" />
+    </AssociationSet>
+    <AssociationSet Name="FK_interneetable_batchtable" Association="Self.FK_interneetable_batchtable">
+      <End Role="batchtable" EntitySet="batchtables" />
+      <End Role="interneetable" EntitySet="interneetables" />
+    </AssociationSet>
+    <AssociationSet Name="FK_interneetable_superisourtable" Association="Self.FK_interneetable_superisourtable">
+      <End Role="supervisortable" EntitySet="supervisortables" />
+      <End Role="interneetable" EntitySet="interneetables" />
+    </AssociationSet>
+    <AssociationSet Name="FK_interneetable_usertable" Association="Self.FK_interneetable_usertable">
+      <End Role="usertable" EntitySet="usertables" />
+      <End Role="interneetable" EntitySet="interneetables" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ManagersTable_usertable" Association="Self.FK_ManagersTable_usertable">
+      <End Role="usertable" EntitySet="usertables" />
+      <End Role="managerstable" EntitySet="managerstables" />
+    </AssociationSet>
+    <AssociationSet Name="FK_superisourtable_usertable" Association="Self.FK_superisourtable_usertable">
+      <End Role="usertable" EntitySet="usertables" />
+      <End Role="supervisortable" EntitySet="supervisortables" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

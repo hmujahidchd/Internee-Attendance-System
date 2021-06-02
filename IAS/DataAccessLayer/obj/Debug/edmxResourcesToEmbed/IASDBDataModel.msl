@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="IASDBModelStoreContainer" CdmEntityContainer="IASDBEntities">
+    <EntitySetMapping Name="attendancestatustables">
+      <EntityTypeMapping TypeName="IASDBModel.attendancestatustable">
+        <MappingFragment StoreEntitySet="attendancestatustable">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="status" ColumnName="status" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="attendancetables">
+      <EntityTypeMapping TypeName="IASDBModel.attendancetable">
+        <MappingFragment StoreEntitySet="attendancetable">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="interneeid" ColumnName="interneeid" />
+          <ScalarProperty Name="reportDatetime" ColumnName="reportDatetime" />
+          <ScalarProperty Name="leaveDatetime" ColumnName="leaveDatetime" />
+          <ScalarProperty Name="statusid" ColumnName="statusid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="batchtables">
+      <EntityTypeMapping TypeName="IASDBModel.batchtable">
+        <MappingFragment StoreEntitySet="batchtable">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="batch" ColumnName="batch" />
+          <ScalarProperty Name="sponsor" ColumnName="sponsor" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="interneetables">
+      <EntityTypeMapping TypeName="IASDBModel.interneetable">
+        <MappingFragment StoreEntitySet="interneetable">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="batchid" ColumnName="batchid" />
+          <ScalarProperty Name="userid" ColumnName="userid" />
+          <ScalarProperty Name="supervisorid" ColumnName="supervisorid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="managerstables">
+      <EntityTypeMapping TypeName="IASDBModel.managerstable">
+        <MappingFragment StoreEntitySet="managerstable">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="userid" ColumnName="userid" />
+          <ScalarProperty Name="designation" ColumnName="designation" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="supervisortables">
+      <EntityTypeMapping TypeName="IASDBModel.supervisortable">
+        <MappingFragment StoreEntitySet="supervisortable">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="userid" ColumnName="userid" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="usertables">
+      <EntityTypeMapping TypeName="IASDBModel.usertable">
+        <MappingFragment StoreEntitySet="usertable">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="username" ColumnName="username" />
+          <ScalarProperty Name="email" ColumnName="email" />
+          <ScalarProperty Name="password" ColumnName="password" />
+          <ScalarProperty Name="fname" ColumnName="fname" />
+          <ScalarProperty Name="cnic" ColumnName="cnic" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

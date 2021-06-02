@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="a067a3ccb6c94a08ae67f096411a977f" Name="Diagram1">
+        <EntityTypeShape EntityType="IASDBModel.attendancestatustable" Width="1.5" PointX="5.25" PointY="3.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="IASDBModel.attendancetable" Width="1.5" PointX="7.5" PointY="5.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="IASDBModel.batchtable" Width="1.5" PointX="3" PointY="3.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="IASDBModel.interneetable" Width="1.5" PointX="5.25" PointY="5.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="IASDBModel.managerstable" Width="1.5" PointX="3" PointY="6.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="IASDBModel.supervisortable" Width="1.5" PointX="3" PointY="8.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="IASDBModel.usertable" Width="1.5" PointX="0.75" PointY="3.625" IsExpanded="true" />
+        <AssociationConnector Association="IASDBModel.FK_attendancetable_attendancestatus" ManuallyRouted="false" />
+        <AssociationConnector Association="IASDBModel.FK_attendancetable_interneetable" ManuallyRouted="false" />
+        <AssociationConnector Association="IASDBModel.FK_interneetable_batchtable" ManuallyRouted="false" />
+        <AssociationConnector Association="IASDBModel.FK_interneetable_superisourtable" ManuallyRouted="false" />
+        <AssociationConnector Association="IASDBModel.FK_interneetable_usertable" ManuallyRouted="false" />
+        <AssociationConnector Association="IASDBModel.FK_ManagersTable_usertable" ManuallyRouted="false" />
+        <AssociationConnector Association="IASDBModel.FK_superisourtable_usertable" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

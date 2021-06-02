@@ -26,10 +26,11 @@ namespace IAS
                       "~/Scripts/js/addons/datatables.min.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
-                      "~/Content/bootstrap4-neon-glow.min.css",
+                      //"~/Content/bootstrap.css",
+                      "~/Content/css/bootstrap4-neon-glow.css",
                       "~/Content/site.css",
-                      "~/Content/css/addons/datatables.min.css"));
+                      "~/Content/css/addons/datatables.min.css",
+                      "~/Content/css/styles.css"));
         }
     }
 }
