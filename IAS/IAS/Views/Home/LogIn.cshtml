@@ -1,0 +1,20 @@
+﻿@model DataAccessLayer.usertable
+@{
+    ViewBag.Title = "LogIn";
+}
+
+<div style="display: flex; align-items: center; justify-content: center; vertical-align:central; height:65vh; min-height:320px; min-width:360px;">
+    @using (Html.BeginForm())
+    {
+         <div class="card text-center">
+             <div class="card-body p-5">
+                 <h4 class="card-title">LOG IN</h4>
+                 @Html.TextBoxFor(model => Model.email, htmlAttributes: new { @class = "form-control", @style = "margin:10px;", @Required = "true" })
+                 @Html.PasswordFor(model => Model.password, htmlAttributes: new { @class = "form-control", @style = "margin:10px;", @Required = "true" })
+                 <div class="text-white">@ViewBag.Message</div>
+                 <button type="submit" class="btn btn-primary">Submit</button>
+             </div>
+         </div>
+    }
+
+</div>

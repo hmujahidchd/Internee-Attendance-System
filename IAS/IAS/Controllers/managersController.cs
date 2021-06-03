@@ -17,30 +17,30 @@ namespace IAS.Controllers
         // GET: managers
         public ActionResult Index()
         {
-            var managerstables = db.managerstables.Include(m => m.usertable);
-            return View(managerstables.ToList());
+            if (Session["managerid"] != null)
+            {
+                var managerstables = db.managerstables.Include(m => m.usertable);
+                return View(managerstables.ToList());
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
-        // GET: managers/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            managerstable managerstable = db.managerstables.Find(id);
-            if (managerstable == null)
-            {
-                return HttpNotFound();
-            }
-            return View(managerstable);
-        }
 
         // GET: managers/Create
         public ActionResult Create()
         {
-            ViewBag.userid = new SelectList(db.usertables, "id", "username");
-            return View();
+            if (Session["managerid"] != null)
+            {
+                ViewBag.userid = new SelectList(db.usertables, "id", "username");
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         // POST: managers/Create
@@ -49,31 +49,47 @@ namespace IAS.Controllers
         [HttpPost]
         public ActionResult Create([Bind(Include = "id,userid,designation")] managerstable managerstable)
         {
-            if (ModelState.IsValid)
+            if (Session["managerid"] != null)
             {
-                db.managerstables.Add(managerstable);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+                if (ModelState.IsValid)
+                {
+                    db.managerstables.Add(managerstable);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
 
-            ViewBag.userid = new SelectList(db.usertables, "id", "username", managerstable.userid);
-            return View(managerstable);
+                ViewBag.userid = new SelectList(db.usertables, "id", "username", managerstable.userid);
+                return View(managerstable);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         // GET: managers/Edit/5
         public ActionResult Edit(int? id)
         {
-            if (id == null)
+
+            if (Session["managerid"] != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                managerstable managerstable = db.managerstables.Find(id);
+                if (managerstable == null)
+                {
+                    return HttpNotFound();
+                }
+                ViewBag.userid = new SelectList(db.usertables, "id", "username", managerstable.userid);
+                return View(managerstable);
             }
-            managerstable managerstable = db.managerstables.Find(id);
-            if (managerstable == null)
+            else
             {
-                return HttpNotFound();
+                return RedirectToAction("Index", "Home");
             }
-            ViewBag.userid = new SelectList(db.usertables, "id", "username", managerstable.userid);
-            return View(managerstable);
+
         }
 
         // POST: managers/Edit/5
@@ -83,40 +99,39 @@ namespace IAS.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "id,userid,designation")] managerstable managerstable)
         {
-            if (ModelState.IsValid)
+            if (Session["managerid"] != null)
             {
-                db.Entry(managerstable).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Entry(managerstable).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                ViewBag.userid = new SelectList(db.usertables, "id", "username", managerstable.userid);
+                return View(managerstable);
             }
-            ViewBag.userid = new SelectList(db.usertables, "id", "username", managerstable.userid);
-            return View(managerstable);
-        }
-
-        // GET: managers/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
+            else
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Index", "Home");
             }
-            managerstable managerstable = db.managerstables.Find(id);
-            if (managerstable == null)
-            {
-                return HttpNotFound();
-            }
-            return View(managerstable);
+            
         }
 
         // POST: managers/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            managerstable managerstable = db.managerstables.Find(id);
-            db.managerstables.Remove(managerstable);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            if (Session["managerid"] != null)
+            {
+                managerstable managerstable = db.managerstables.Find(id);
+                db.managerstables.Remove(managerstable);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         protected override void Dispose(bool disposing)

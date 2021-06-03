@@ -17,28 +17,28 @@ namespace IAS.Controllers
         // GET: user
         public ActionResult Index()
         {
-            return View(db.usertables.ToList());
+            if (Session["managerid"] != null)
+            {
+                return View(db.usertables.ToList());
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
-        // GET: user/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            usertable usertable = db.usertables.Find(id);
-            if (usertable == null)
-            {
-                return HttpNotFound();
-            }
-            return View(usertable);
-        }
 
         // GET: user/Create
         public ActionResult Create()
         {
-            return View();
+            if (Session["managerid"] != null)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         // POST: user/Create
@@ -47,29 +47,43 @@ namespace IAS.Controllers
         [HttpPost]
         public ActionResult Create([Bind(Include = "id,username,email,password,fname,cnic")] usertable usertable)
         {
-            if (ModelState.IsValid)
+            if (Session["managerid"] != null)
             {
-                db.usertables.Add(usertable);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+                if (ModelState.IsValid)
+                {
+                    db.usertables.Add(usertable);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
 
-            return View(usertable);
+                return View(usertable);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         // GET: user/Edit/5
         public ActionResult Edit(int? id)
         {
-            if (id == null)
+            if (Session["managerid"] != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                usertable usertable = db.usertables.Find(id);
+                if (usertable == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(usertable);
             }
-            usertable usertable = db.usertables.Find(id);
-            if (usertable == null)
+            else
             {
-                return HttpNotFound();
+                return RedirectToAction("Index", "Home");
             }
-            return View(usertable);
         }
 
         // POST: user/Edit/5
@@ -79,38 +93,38 @@ namespace IAS.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "id,username,email,password,fname,cnic")] usertable usertable)
         {
-            if (ModelState.IsValid)
+            if (Session["managerid"] != null)
             {
-                db.Entry(usertable).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Entry(usertable).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                return View(usertable);
             }
-            return View(usertable);
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
-        // GET: user/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            usertable usertable = db.usertables.Find(id);
-            if (usertable == null)
-            {
-                return HttpNotFound();
-            }
-            return View(usertable);
-        }
 
         // POST: user/Delete/5
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
-            usertable usertable = db.usertables.Find(id);
-            db.usertables.Remove(usertable);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            if (Session["managerid"] != null)
+            {
+                usertable usertable = db.usertables.Find(id);
+                db.usertables.Remove(usertable);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         protected override void Dispose(bool disposing)

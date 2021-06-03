@@ -7,7 +7,11 @@
 <h2>@ViewBag.Title</h2>
 
 <p>
-    @Html.ActionLink("Add", "Create", null, new { @class = "btn btn-primary" })
+
+    @if (Session["managerid"] != null)
+    {
+        Html.ActionLink("Add", "Create", null, new { @class = "btn btn-primary" });
+    }
 </p>
 <table class="table">
     <tr>
@@ -36,8 +40,11 @@
                 @Html.DisplayFor(modelItem => item.usertable.username)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.id }, new { @class = "btn btn-primary" }) &nbsp;&nbsp;
-                @Html.ActionLink("Delete", "Delete", new { id = item.id }, new { @class = "btn btn-danger" })
+                @if (Session["managerid"] != null)
+                {
+                    Html.ActionLink("Edit", "Edit", new { id = item.id }, new { @class = "btn btn-primary" }); 
+                    Html.ActionLink("Delete", "Delete", new { id = item.id }, new { @class = "btn btn-danger" });
+                }
             </td>
         </tr>
     }

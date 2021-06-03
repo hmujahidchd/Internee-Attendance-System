@@ -17,59 +17,75 @@ namespace IAS.Controllers
         // GET: batch
         public ActionResult Index()
         {
-            return View(db.batchtables.ToList());
+            if (Session["managerid"] != null)
+            {
+                return View(db.batchtables.ToList());
+            }
+            else
+            {
+                return RedirectToAction("Index","Home");
+            }
         }
 
-        // GET: batch/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            batchtable batchtable = db.batchtables.Find(id);
-            if (batchtable == null)
-            {
-                return HttpNotFound();
-            }
-            return View(batchtable);
-        }
 
         // GET: batch/Create
         public ActionResult Create()
         {
-            return View();
+
+            if (Session["managerid"] != null)
+            {
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         // POST: batch/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "id,batch,sponsor")] batchtable batchtable)
         {
-            if (ModelState.IsValid)
+            if (Session["managerid"] != null)
             {
-                db.batchtables.Add(batchtable);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+                if (ModelState.IsValid)
+                {
+                    db.batchtables.Add(batchtable);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                return View(batchtable);
 
-            return View(batchtable);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         // GET: batch/Edit/5
         public ActionResult Edit(int? id)
         {
-            if (id == null)
+            if (Session["managerid"] != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                batchtable batchtable = db.batchtables.Find(id);
+                if (batchtable == null)
+                {
+                    return HttpNotFound();
+                }
+                return View(batchtable);
             }
-            batchtable batchtable = db.batchtables.Find(id);
-            if (batchtable == null)
+            else
             {
-                return HttpNotFound();
+                return RedirectToAction("Index", "Home");
             }
-            return View(batchtable);
         }
 
         // POST: batch/Edit/5
@@ -79,38 +95,39 @@ namespace IAS.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "id,batch,sponsor")] batchtable batchtable)
         {
-            if (ModelState.IsValid)
-            {
-                db.Entry(batchtable).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            return View(batchtable);
-        }
 
-        // GET: batch/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
+            if (Session["managerid"] != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (ModelState.IsValid)
+                {
+                    db.Entry(batchtable).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                return View(batchtable);
             }
-            batchtable batchtable = db.batchtables.Find(id);
-            if (batchtable == null)
+            else
             {
-                return HttpNotFound();
+                return RedirectToAction("Index", "Home");
             }
-            return View(batchtable);
         }
 
         // POST: batch/Delete/5
         [HttpPost, ActionName("Delete")]
         public ActionResult DeleteConfirmed(int id)
         {
-            batchtable batchtable = db.batchtables.Find(id);
-            db.batchtables.Remove(batchtable);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            if (Session["managerid"] != null)
+            {
+                batchtable batchtable = db.batchtables.Find(id);
+                db.batchtables.Remove(batchtable);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         protected override void Dispose(bool disposing)

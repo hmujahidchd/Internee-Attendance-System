@@ -24,11 +24,26 @@
                 <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div class="navbar-nav">
                         @Html.ActionLink("Home", "Index", "Home", "", new { @class = "p-3 text-decoration-none text-light" })
-                        @Html.ActionLink("Baches", "Index", "batch", "", new { @class = "p-3 text-decoration-none text-light" })
-                        @Html.ActionLink("Internee", "Index", "internee", "", new { @class = "p-3 text-decoration-none text-light" })
-                        @Html.ActionLink("Managers", "Index", "managers", "", new { @class = "p-3 text-decoration-none text-light" })
-                        @Html.ActionLink("Supervisor", "Index", "supervisor", "", new { @class = "p-3 text-decoration-none text-light" })
-                        @Html.ActionLink("User", "Index", "user", "", new { @class = "p-3 text-decoration-none text-light" })
+                        @if (Session["managerid"] != null)
+                        {
+                            @Html.ActionLink("Baches", "Index", "batch", "", new { @class = "p-3 text-decoration-none text-light" });
+                            @Html.ActionLink("Internee", "Index", "internee", "", new { @class = "p-3 text-decoration-none text-light" });
+                            @Html.ActionLink("Managers", "Index", "managers", "", new { @class = "p-3 text-decoration-none text-light" });
+                            @Html.ActionLink("Supervisor", "Index", "supervisor", "", new { @class = "p-3 text-decoration-none text-light" });
+                            @Html.ActionLink("User", "Index", "user", "", new { @class = "p-3 text-decoration-none text-light" });
+                        }
+                        else if(Session["supervisorid"]!=null)
+                        {
+                            @Html.ActionLink("Internee", "Index", "internee", "", new { @class = "p-3 text-decoration-none text-light" });
+                        }
+                        @if (Session["email"] != null)
+                        {
+                            @Html.ActionLink("Log Out", "LogOut", "Home", "", new { @class = "p-3 text-decoration-none text-light" });
+                        }
+                        else
+                        {
+                            @Html.ActionLink("Log In", "LogIn", "Home", "", new { @class = "p-3 text-decoration-none text-light" });
+                        }
                     </div>
                 </div>
             </nav>

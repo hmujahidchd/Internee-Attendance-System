@@ -17,32 +17,32 @@ namespace IAS.Controllers
         // GET: internee
         public ActionResult Index()
         {
-            var interneetables = db.interneetables.Include(i => i.batchtable).Include(i => i.supervisortable).Include(i => i.usertable);
-            return View(interneetables.ToList());
-        }
-
-        // GET: internee/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
+            if (Session["managerid"] != null || Session["supervisor"] != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                var interneetables = db.interneetables.Include(i => i.batchtable).Include(i => i.supervisortable).Include(i => i.usertable);
+                return View(interneetables.ToList());
             }
-            interneetable interneetable = db.interneetables.Find(id);
-            if (interneetable == null)
+            else
             {
-                return HttpNotFound();
+                return RedirectToAction("Index", "Home");
             }
-            return View(interneetable);
         }
 
         // GET: internee/Create
         public ActionResult Create()
         {
-            ViewBag.batchid = new SelectList(db.batchtables, "id", "batch");
-            ViewBag.supervisorid = new SelectList(db.supervisortables, "id", "id");
-            ViewBag.userid = new SelectList(db.usertables, "id", "username");
-            return View();
+
+            if (Session["managerid"] != null)
+            {
+                ViewBag.batchid = new SelectList(db.batchtables, "id", "batch");
+                ViewBag.supervisorid = new SelectList(db.supervisortables, "id", "id");
+                ViewBag.userid = new SelectList(db.usertables, "id", "username");
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         // POST: internee/Create
@@ -51,35 +51,51 @@ namespace IAS.Controllers
         [HttpPost]
         public ActionResult Create([Bind(Include = "id,batchid,userid,supervisorid")] interneetable interneetable)
         {
-            if (ModelState.IsValid)
+            if (Session["managerid"] != null)
             {
-                db.interneetables.Add(interneetable);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
 
-            ViewBag.batchid = new SelectList(db.batchtables, "id", "batch", interneetable.batchid);
-            ViewBag.supervisorid = new SelectList(db.supervisortables, "id", "id", interneetable.supervisorid);
-            ViewBag.userid = new SelectList(db.usertables, "id", "username", interneetable.userid);
-            return View(interneetable);
+                if (ModelState.IsValid)
+                {
+                    db.interneetables.Add(interneetable);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+
+                ViewBag.batchid = new SelectList(db.batchtables, "id", "batch", interneetable.batchid);
+                ViewBag.supervisorid = new SelectList(db.supervisortables, "id", "id", interneetable.supervisorid);
+                ViewBag.userid = new SelectList(db.usertables, "id", "username", interneetable.userid);
+                return View(interneetable);
+
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         // GET: internee/Edit/5
         public ActionResult Edit(int? id)
         {
-            if (id == null)
+            if (Session["managerid"] != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                interneetable interneetable = db.interneetables.Find(id);
+                if (interneetable == null)
+                {
+                    return HttpNotFound();
+                }
+                ViewBag.batchid = new SelectList(db.batchtables, "id", "batch", interneetable.batchid);
+                ViewBag.supervisorid = new SelectList(db.supervisortables, "id", "id", interneetable.supervisorid);
+                ViewBag.userid = new SelectList(db.usertables, "id", "username", interneetable.userid);
+                return View(interneetable);
             }
-            interneetable interneetable = db.interneetables.Find(id);
-            if (interneetable == null)
+            else
             {
-                return HttpNotFound();
+                return RedirectToAction("Index", "Home");
             }
-            ViewBag.batchid = new SelectList(db.batchtables, "id", "batch", interneetable.batchid);
-            ViewBag.supervisorid = new SelectList(db.supervisortables, "id", "id", interneetable.supervisorid);
-            ViewBag.userid = new SelectList(db.usertables, "id", "username", interneetable.userid);
-            return View(interneetable);
         }
 
         // POST: internee/Edit/5
@@ -89,42 +105,40 @@ namespace IAS.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "id,batchid,userid,supervisorid")] interneetable interneetable)
         {
-            if (ModelState.IsValid)
+            if (Session["managerid"] != null || Session["supervisor"] != null)
             {
-                db.Entry(interneetable).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Entry(interneetable).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                ViewBag.batchid = new SelectList(db.batchtables, "id", "batch", interneetable.batchid);
+                ViewBag.supervisorid = new SelectList(db.supervisortables, "id", "id", interneetable.supervisorid);
+                ViewBag.userid = new SelectList(db.usertables, "id", "username", interneetable.userid);
+                return View(interneetable);
             }
-            ViewBag.batchid = new SelectList(db.batchtables, "id", "batch", interneetable.batchid);
-            ViewBag.supervisorid = new SelectList(db.supervisortables, "id", "id", interneetable.supervisorid);
-            ViewBag.userid = new SelectList(db.usertables, "id", "username", interneetable.userid);
-            return View(interneetable);
-        }
-
-        // GET: internee/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
+            else
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Index", "Home");
             }
-            interneetable interneetable = db.interneetables.Find(id);
-            if (interneetable == null)
-            {
-                return HttpNotFound();
-            }
-            return View(interneetable);
         }
 
         // POST: internee/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            interneetable interneetable = db.interneetables.Find(id);
-            db.interneetables.Remove(interneetable);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            if (Session["managerid"] != null)
+            {
+                interneetable interneetable = db.interneetables.Find(id);
+                db.interneetables.Remove(interneetable);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         protected override void Dispose(bool disposing)

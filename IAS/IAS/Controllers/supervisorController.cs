@@ -17,30 +17,29 @@ namespace IAS.Controllers
         // GET: supervisor
         public ActionResult Index()
         {
-            var supervisortables = db.supervisortables.Include(s => s.usertable);
-            return View(supervisortables.ToList());
-        }
-
-        // GET: supervisor/Details/5
-        public ActionResult Details(int? id)
-        {
-            if (id == null)
+            if (Session["managerid"] != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                var supervisortables = db.supervisortables.Include(s => s.usertable);
+                return View(supervisortables.ToList());
             }
-            supervisortable supervisortable = db.supervisortables.Find(id);
-            if (supervisortable == null)
+            else
             {
-                return HttpNotFound();
+                return RedirectToAction("Index", "Home");
             }
-            return View(supervisortable);
         }
 
         // GET: supervisor/Create
         public ActionResult Create()
         {
-            ViewBag.userid = new SelectList(db.usertables, "id", "username");
-            return View();
+            if (Session["managerid"] != null)
+            {
+                ViewBag.userid = new SelectList(db.usertables, "id", "username");
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         // POST: supervisor/Create
@@ -49,31 +48,45 @@ namespace IAS.Controllers
         [HttpPost]
         public ActionResult Create([Bind(Include = "id,userid")] supervisortable supervisortable)
         {
-            if (ModelState.IsValid)
+            if (Session["managerid"] != null)
             {
-                db.supervisortables.Add(supervisortable);
-                db.SaveChanges();
-                return RedirectToAction("Index");
-            }
+                if (ModelState.IsValid)
+                {
+                    db.supervisortables.Add(supervisortable);
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
 
-            ViewBag.userid = new SelectList(db.usertables, "id", "username", supervisortable.userid);
-            return View(supervisortable);
+                ViewBag.userid = new SelectList(db.usertables, "id", "username", supervisortable.userid);
+                return View(supervisortable);
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         // GET: supervisor/Edit/5
         public ActionResult Edit(int? id)
         {
-            if (id == null)
+            if (Session["managerid"] != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                if (id == null)
+                {
+                    return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                }
+                supervisortable supervisortable = db.supervisortables.Find(id);
+                if (supervisortable == null)
+                {
+                    return HttpNotFound();
+                }
+                ViewBag.userid = new SelectList(db.usertables, "id", "username", supervisortable.userid);
+                return View(supervisortable);
             }
-            supervisortable supervisortable = db.supervisortables.Find(id);
-            if (supervisortable == null)
+            else
             {
-                return HttpNotFound();
+                return RedirectToAction("Index", "Home");
             }
-            ViewBag.userid = new SelectList(db.usertables, "id", "username", supervisortable.userid);
-            return View(supervisortable);
         }
 
         // POST: supervisor/Edit/5
@@ -83,40 +96,38 @@ namespace IAS.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "id,userid")] supervisortable supervisortable)
         {
-            if (ModelState.IsValid)
+            if (Session["managerid"] != null)
             {
-                db.Entry(supervisortable).State = EntityState.Modified;
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                if (ModelState.IsValid)
+                {
+                    db.Entry(supervisortable).State = EntityState.Modified;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
+                ViewBag.userid = new SelectList(db.usertables, "id", "username", supervisortable.userid);
+                return View(supervisortable);
             }
-            ViewBag.userid = new SelectList(db.usertables, "id", "username", supervisortable.userid);
-            return View(supervisortable);
-        }
-
-        // GET: supervisor/Delete/5
-        public ActionResult Delete(int? id)
-        {
-            if (id == null)
+            else
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                return RedirectToAction("Index", "Home");
             }
-            supervisortable supervisortable = db.supervisortables.Find(id);
-            if (supervisortable == null)
-            {
-                return HttpNotFound();
-            }
-            return View(supervisortable);
         }
 
         // POST: supervisor/Delete/5
         [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            supervisortable supervisortable = db.supervisortables.Find(id);
-            db.supervisortables.Remove(supervisortable);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            if (Session["managerid"] != null)
+            {
+                supervisortable supervisortable = db.supervisortables.Find(id);
+                db.supervisortables.Remove(supervisortable);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
 
         protected override void Dispose(bool disposing)

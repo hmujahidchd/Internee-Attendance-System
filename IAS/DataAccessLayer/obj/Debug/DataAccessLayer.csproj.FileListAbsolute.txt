@@ -5,6 +5,7 @@ E:\GitHub\hmujahidchd\Internee-Attendance-System\IAS\DataAccessLayer\bin\Debug\E
 E:\GitHub\hmujahidchd\Internee-Attendance-System\IAS\DataAccessLayer\bin\Debug\EntityFramework.SqlServer.dll
 E:\GitHub\hmujahidchd\Internee-Attendance-System\IAS\DataAccessLayer\bin\Debug\EntityFramework.xml
 E:\GitHub\hmujahidchd\Internee-Attendance-System\IAS\DataAccessLayer\bin\Debug\EntityFramework.SqlServer.xml
+E:\GitHub\hmujahidchd\Internee-Attendance-System\IAS\DataAccessLayer\obj\Debug\DataAccessLayer.csproj.AssemblyReference.cache
 E:\GitHub\hmujahidchd\Internee-Attendance-System\IAS\DataAccessLayer\obj\Debug\DataAccessLayer.csproj.CoreCompileInputs.cache
 E:\GitHub\hmujahidchd\Internee-Attendance-System\IAS\DataAccessLayer\obj\Debug\DataAccessLayer.csproj.CopyComplete
 E:\GitHub\hmujahidchd\Internee-Attendance-System\IAS\DataAccessLayer\obj\Debug\DataAccessLayer.dll
