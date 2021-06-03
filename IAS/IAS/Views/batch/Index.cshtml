@@ -1,0 +1,77 @@
+﻿@model IEnumerable<DataAccessLayer.batchtable>
+
+@{
+    ViewBag.Title = "Baches";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>
+    @Html.ActionLink("Add", "Create", null, new { @class="btn btn-primary"})
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.batch)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.sponsor)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.batch)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.sponsor)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id = item.id }, new { @class = "btn btn-primary" }) &nbsp;&nbsp;
+            <button class="btn btn-danger" onclick="deleteItem(@item.id)">Delete</button>
+        </td>
+    </tr>
+}
+
+</table>
+@section scripts{
+    <script>
+        var website = "https://" + window.location.host;
+        function deleteItem(id) {
+            var locale = $('#locales').val();
+            bootbox.confirm({
+                message: "Do you really want to delete?",
+                buttons: {
+                    confirm: {
+                        label: 'Yes',
+                        className: 'btn-danger'
+                    },
+                    cancel: {
+                        label: 'No',
+                        className: 'btn-success'
+                    }
+                },
+                callback: function (result) {
+                    if (result)
+                    {
+                        $.ajax({
+                            url: website + "/batch/delete/" + id,
+                            type: 'POST',
+                            dataType: "json",
+                            contentType: "application/json; charset=utf-8",
+                            success: function (data, textStatus, xhr) {
+                                window.location.reload();
+                            },
+                            error: function (xhr, textStatus, errorThrown) {
+                                console.log('Error in Operation' + textStatus);
+                                window.location.reload();
+                            }
+                        });
+                    }
+                }
+            });
+        }
+    </script>
+    }

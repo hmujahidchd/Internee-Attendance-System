@@ -21,8 +21,8 @@ namespace IAS
 
             bundles.Add(new ScriptBundle("~/bundles/bootstrap").Include(
                       "~/Scripts/bootstrap.js",
-                      "~/Scripts/bootbox.js",
-                      "~/Scripts/bootbox.locales.js",
+                      //"~/Scripts/bootbox-min.js",
+                      //"~/Scripts/bootbox.locales-min.js",
                       "~/Scripts/js/addons/datatables.min.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
@@ -30,6 +30,7 @@ namespace IAS
                       "~/Content/css/bootstrap4-neon-glow.css",
                       "~/Content/site.css",
                       "~/Content/css/addons/datatables.min.css",
+                      "~/Content/IASStylesheet.css",
                       "~/Content/css/styles.css"));
         }
     }

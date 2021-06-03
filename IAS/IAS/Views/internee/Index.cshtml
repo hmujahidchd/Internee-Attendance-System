@@ -1,0 +1,45 @@
+﻿@model IEnumerable<DataAccessLayer.interneetable>
+
+@{
+    ViewBag.Title = "Internees";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<p>
+    @Html.ActionLink("Add", "Create", null, new { @class = "btn btn-primary" })
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.batchtable.batch)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.supervisortable.id)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.usertable.username)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.batchtable.batch)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.supervisortable.id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.usertable.username)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.id }, new { @class = "btn btn-primary" }) &nbsp;&nbsp;
+                @Html.ActionLink("Delete", "Delete", new { id = item.id }, new { @class = "btn btn-danger" })
+            </td>
+        </tr>
+    }
+
+</table>

@@ -15,17 +15,20 @@
     <div class="navbar-dark text-white">
         <div class="container">
             <nav class="navbar px-0 navbar-expand-lg navbar-dark">
+                <span class="ht-tm-navbar-title" style="float:left;">
+                    @Html.ActionLink("Internee Attendance System", "Index", "Home", new { area = "" }, new { @class = "text-decoration-none text-light" })
+                </span>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <span class="ht-tm-navbar-title">
-                    @Html.ActionLink("Internee Attendance System", "Index", "Home", new { area = "" }, new { @class = "text-decoration-none text-light" })
-                </span>
                 <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
                     <div class="navbar-nav">
                         @Html.ActionLink("Home", "Index", "Home", "", new { @class = "p-3 text-decoration-none text-light" })
-                        @Html.ActionLink("About", "About", "Home", "", new { @class = "p-3 text-decoration-none text-light" })
-                        @Html.ActionLink("Contact", "Contact", "Home", "", new { @class = "p-3 text-decoration-none text-light" })
+                        @Html.ActionLink("Baches", "Index", "batch", "", new { @class = "p-3 text-decoration-none text-light" })
+                        @Html.ActionLink("Internee", "Index", "internee", "", new { @class = "p-3 text-decoration-none text-light" })
+                        @Html.ActionLink("Managers", "Index", "managers", "", new { @class = "p-3 text-decoration-none text-light" })
+                        @Html.ActionLink("Supervisor", "Index", "supervisor", "", new { @class = "p-3 text-decoration-none text-light" })
+                        @Html.ActionLink("User", "Index", "user", "", new { @class = "p-3 text-decoration-none text-light" })
                     </div>
                 </div>
             </nav>
@@ -37,12 +40,13 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - NSDevelopers</p>
+            <p style="text-align:center;">&copy; @DateTime.Now.Year - NSDevelopers</p>
         </footer>
     </div>
 
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/5.5.2/bootbox.min.js" integrity="sha512-RdSPYh1WA6BF0RhpisYJVYkOyTzK4HwofJ3Q7ivt/jkpW6Vc8AurL1R+4AUcvn9IwEKAPm/fk7qFZW3OuiUDeg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     @RenderSection("scripts", required: false)
 </body>
 </html>

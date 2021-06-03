@@ -1,0 +1,28 @@
+﻿.detail-row {
+    height: 45px;
+    display: block;
+    padding: 10px 20px 0px 15px;
+    vertical-align: middle;
+}
+
+.detail-title {
+    float: left;
+    text-align: left;
+    align-items: center;
+}
+
+.detail-value {
+    float: right;
+    text-align: Right;
+    align-items: center;
+}
+
+.highlight-green {
+    font-weight: 400;
+    background-color: rgba(46,255,46,0.15);
+}
+
+.highlight-red {
+    font-weight: 400;
+    background-color: rgba(255,46,46,0.25);
+}
