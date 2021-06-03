@@ -38,7 +38,7 @@
 </table>
 @section scripts{
     <script>
-        var website = "https://" + window.location.host;
+        var website = location.protocol +"//" + window.location.host;
         function deleteItem(id) {
             var locale = $('#locales').val();
             bootbox.confirm({
