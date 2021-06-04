@@ -49,9 +49,49 @@
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { id = item.id }, new { @class = "btn btn-primary" }) &nbsp;&nbsp;
-                @Html.ActionLink("Delete", "Delete", new { id = item.id }, new { @class = "btn btn-danger" })
+                @if (item.interneetables.Count() < 1 || item.supervisortables.Count() < 1 || item.managerstables.Count() < 1)
+                {
+                    <button class="btn btn-danger" onclick="deleteItem(@item.id)">Delete</button>
+                }
             </td>
         </tr>
     }
 
 </table>
+<script>
+    var website = location.protocol + "//" + window.location.host;
+    function deleteItem(id) {
+        var locale = $('#locales').val();
+        bootbox.confirm({
+            message: "Do you really want to delete?",
+            buttons: {
+                confirm: {
+                    label: 'Yes',
+                    className: 'btn-danger'
+                },
+                cancel: {
+                    label: 'No',
+                    className: 'btn-success'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    $.ajax({
+                        url: website + "/user/delete/" + id,
+                        type: 'POST',
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (data, textStatus, xhr) {
+                            window.location.reload();
+                        },
+                        error: function (xhr, textStatus, errorThrown) {
+                            console.log('Error in Operation' + textStatus);
+                            window.location.reload();
+                        }
+                    });
+                }
+            }
+        });
+    }
+</script>
+    }

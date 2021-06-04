@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using DataAccessLayer;
+using IAS.Helper_Class;
 
 namespace IAS.Controllers
 {
@@ -34,9 +35,19 @@ namespace IAS.Controllers
 
             if (Session["managerid"] != null)
             {
+                var usertables = db.usertables.ToList();
+                var interneetables = db.interneetables.ToList();
+                foreach(var internee in interneetables)
+                {
+                    var user = usertables.FirstOrDefault(e => e.id == internee.userid);
+                    if(user !=null)
+                    {
+                        usertables.Remove(user);
+                    }
+                }
                 ViewBag.batchid = new SelectList(db.batchtables, "id", "batch");
-                ViewBag.supervisorid = new SelectList(db.supervisortables, "id", "id");
-                ViewBag.userid = new SelectList(db.usertables, "id", "username");
+                ViewBag.supervisorid = new SelectList(Cls_Supervisor.SupervisorList(), "id", "username");
+                ViewBag.userid = new SelectList(usertables, "id", "username");
                 return View();
             }
             else
@@ -87,9 +98,10 @@ namespace IAS.Controllers
                 {
                     return HttpNotFound();
                 }
+
                 ViewBag.batchid = new SelectList(db.batchtables, "id", "batch", interneetable.batchid);
-                ViewBag.supervisorid = new SelectList(db.supervisortables, "id", "id", interneetable.supervisorid);
-                ViewBag.userid = new SelectList(db.usertables, "id", "username", interneetable.userid);
+                ViewBag.supervisorid = new SelectList(Cls_Supervisor.SupervisorList(), "id", "username", interneetable.supervisorid);
+                ViewBag.userid = new SelectList(db.usertables.ToList().Where(e=>e.id == interneetable.userid), "id", "username", interneetable.userid);
                 return View(interneetable);
             }
             else
@@ -114,8 +126,8 @@ namespace IAS.Controllers
                     return RedirectToAction("Index");
                 }
                 ViewBag.batchid = new SelectList(db.batchtables, "id", "batch", interneetable.batchid);
-                ViewBag.supervisorid = new SelectList(db.supervisortables, "id", "id", interneetable.supervisorid);
-                ViewBag.userid = new SelectList(db.usertables, "id", "username", interneetable.userid);
+                ViewBag.supervisorid = new SelectList(Cls_Supervisor.SupervisorList(), "id", "username", interneetable.supervisorid);
+                ViewBag.userid = new SelectList(db.usertables.ToList().Where(e => e.id == interneetable.userid), "id", "username", interneetable.userid);
                 return View(interneetable);
             }
             else

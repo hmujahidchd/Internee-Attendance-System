@@ -1,5 +1,6 @@
 ﻿
 using DataAccessLayer;
+using IAS.Helper_Class;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,21 +12,29 @@ namespace IAS.Controllers
     public class HomeController : Controller
     {
         IASDBEntities DB = new IASDBEntities();
-        public ActionResult Index()
+        public ActionResult Index(int InterneeId = 0)
         {
             if(Session["email"]!=null)
             {
-                if (Session["managerid"] != null)
+                if(InterneeId !=0)
                 {
-                    return RedirectToAction("index", "internee");
+                    Session["interneeid"] = InterneeId; 
+                    return View(Cls_Attendance.GetAttendanceDetails((int)Session["interneeid"]));
                 }
-                else if (Session["supervisorid"] != null)
+                else
                 {
-                    return RedirectToAction("index", "internee");
-                }
-                else if (Session["interneeid"] != null)
-                {
-                    return View();
+                    if (Session["managerid"] != null)
+                    {
+                        return RedirectToAction("index", "internee");
+                    }
+                    else if (Session["supervisorid"] != null)
+                    {
+                        return RedirectToAction("index", "internee");
+                    }
+                    else if (Session["interneeid"] != null)
+                    {
+                        return View(Cls_Attendance.GetAttendanceDetails((int)Session["interneeid"]));
+                    }
                 }
             }
             return RedirectToAction("LogIn");
@@ -75,7 +84,14 @@ namespace IAS.Controllers
             Session["email"] = user.email;
             return RedirectToAction("index");
         }
-
+        public ActionResult AttendanceReport(int Year, int Month)
+        {
+            if (Session["email"] == null)
+            {
+                return RedirectToAction("Index");
+            }
+            return View(Cls_Attendance.GetAttendanceReport((int)Session["interneeid"], Year,Month));
+        }
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";

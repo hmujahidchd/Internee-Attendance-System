@@ -10,19 +10,19 @@
 
     @if (Session["managerid"] != null)
     {
-        Html.ActionLink("Add", "Create", null, new { @class = "btn btn-primary" });
+        @Html.ActionLink("Add", "Create", null, new { @class = "btn btn-primary" });
     }
 </p>
 <table class="table">
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.batchtable.batch)
+            Batch
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.supervisortable.id)
+            Supervisor
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.usertable.username)
+            Internee
         </th>
         <th></th>
     </tr>
@@ -34,7 +34,7 @@
                 @Html.DisplayFor(modelItem => item.batchtable.batch)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.supervisortable.id)
+                @Html.DisplayFor(modelItem => item.supervisortable.usertable.username)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.usertable.username)
@@ -42,11 +42,51 @@
             <td>
                 @if (Session["managerid"] != null)
                 {
-                    Html.ActionLink("Edit", "Edit", new { id = item.id }, new { @class = "btn btn-primary" }); 
-                    Html.ActionLink("Delete", "Delete", new { id = item.id }, new { @class = "btn btn-danger" });
+                    @Html.ActionLink("Edit", "Edit", new { id = item.id }, new { @class = "btn btn-primary" }) @Html.Raw("&nbsp;&nbsp;");
+                    if (item.attendancetables.Count() <1)
+                    {
+                        <button class="btn btn-danger" onclick="deleteItem(@item.id)">Delete</button>
+                    }
                 }
             </td>
         </tr>
     }
 
 </table>
+<script>
+    var website = location.protocol + "//" + window.location.host;
+    function deleteItem(id) {
+        var locale = $('#locales').val();
+        bootbox.confirm({
+            message: "Do you really want to delete?",
+            buttons: {
+                confirm: {
+                    label: 'Yes',
+                    className: 'btn-danger'
+                },
+                cancel: {
+                    label: 'No',
+                    className: 'btn-success'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    $.ajax({
+                        url: website + "/internee/delete/" + id,
+                        type: 'POST',
+                        dataType: "json",
+                        contentType: "application/json; charset=utf-8",
+                        success: function (data, textStatus, xhr) {
+                            window.location.reload();
+                        },
+                        error: function (xhr, textStatus, errorThrown) {
+                            console.log('Error in Operation' + textStatus);
+                            window.location.reload();
+                        }
+                    });
+                }
+            }
+        });
+    }
+</script>
+    }

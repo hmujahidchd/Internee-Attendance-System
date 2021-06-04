@@ -30,7 +30,10 @@
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id = item.id }, new { @class = "btn btn-primary" }) &nbsp;&nbsp;
-            <button class="btn btn-danger" onclick="deleteItem(@item.id)">Delete</button>
+            @if (item.interneetables.Count() <1)
+            {
+                <button class="btn btn-danger" onclick="deleteItem(@item.id)">Delete</button>
+            }
         </td>
     </tr>
 }

@@ -1,4 +1,5 @@
-﻿@{
+﻿@model List<IAS.ViewModel.MonthViewModel>
+@{
     ViewBag.Title = "Home Page";
 }
 
@@ -25,9 +26,9 @@
     </div>
 </div>
 <div class="row">
-    @for (int i = 1; i <= 12; i++)
+    @foreach(var item in Model)
     {
-        var date = new DateTime(2021,i,1);
+        var date = new DateTime(item.Year,item.Month,1);
         <div class="col-md-4" style="margin-bottom:10px;">
             <div class="card text-center">
                 <div class="card-header">
@@ -40,11 +41,11 @@
                     </div>
                     <h4 class="card-title">Special title treatment</h4>
                     
-                    <div class="detail-row"><div class="detail-title">Present</div><div class="detail-value">20 days</div></div>
-                    <div class="detail-row highlight-red"><div class="detail-title">Absent</div> <div class="detail-value">10 days</div></div>
-                    <div class="detail-row"><div class="detail-title">Total</div>  <div class="detail-value">30 days</div></div>
+                    <div class="detail-row"><div class="detail-title">Present</div><div class="detail-value">@item.Present days</div></div>
+                    <div class="detail-row highlight-red"><div class="detail-title">Absent</div> <div class="detail-value">@item.Absent days</div></div>
+                    <div class="detail-row"><div class="detail-title">Total</div>  <div class="detail-value">@item.TotalWorkingDays days</div></div>
                 </div>
-                <a class="card-footer text-muted text-decoration-none text-light" href="#">
+                <a class="card-footer text-muted text-decoration-none text-light" href="/home/AttendanceReport?Year=@item.Year&Month=@item.Month">
                     Details
                 </a>
             </div>
