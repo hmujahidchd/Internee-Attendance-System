@@ -1,6 +1,7 @@
 ﻿
 using DataAccessLayer;
 using IAS.Helper_Class;
+using IAS.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,8 +19,12 @@ namespace IAS.Controllers
             {
                 if(InterneeId !=0)
                 {
-                    Session["interneeid"] = InterneeId; 
-                    return View(Cls_Attendance.GetAttendanceDetails((int)Session["interneeid"]));
+                    Session["interneeid"] = InterneeId;
+                    var Data = new DashboardViewModel();
+                    Data.User = DB.interneetables.ToList().FirstOrDefault(e => e.id == InterneeId).usertable;
+                    Data.Attendance = Cls_Attendance.GetAttendanceDetails((int)Session["interneeid"]);
+                    Data.Supervisor = DB.supervisortables.ToList().FirstOrDefault(e=>e.id == DB.interneetables.ToList().FirstOrDefault(a=>a.id==InterneeId).supervisorid).usertable;
+                    return View(Data);
                 }
                 else
                 {
@@ -33,7 +38,11 @@ namespace IAS.Controllers
                     }
                     else if (Session["interneeid"] != null)
                     {
-                        return View(Cls_Attendance.GetAttendanceDetails((int)Session["interneeid"]));
+                        var Data = new DashboardViewModel();
+                        Data.User = DB.interneetables.ToList().FirstOrDefault(e => e.id == (int)Session["interneeid"]).usertable;
+                        Data.Attendance = Cls_Attendance.GetAttendanceDetails((int)Session["interneeid"]);
+                        Data.Supervisor = DB.supervisortables.ToList().FirstOrDefault(e => e.id == DB.interneetables.ToList().FirstOrDefault(a => a.id == (int)Session["interneeid"]).supervisorid).usertable;
+                        return View(Data);
                     }
                 }
             }
@@ -91,6 +100,22 @@ namespace IAS.Controllers
                 return RedirectToAction("Index");
             }
             return View(Cls_Attendance.GetAttendanceReport((int)Session["interneeid"], Year,Month));
+        }
+        public ActionResult GeneratePrintPreview(int Year, int Month)
+        {
+            if (Session["email"] == null)
+            {
+                return RedirectToAction("Index");
+            }
+            return View(Cls_Attendance.GetAttendanceReport((int)Session["interneeid"], Year, Month));
+        }
+        public ActionResult GeneratePDF(int Year, int Month)
+        {
+            if (Session["email"] == null)
+            {
+                return RedirectToAction("Index");
+            }
+            return new Rotativa.ViewAsPdf("GeneratePDF", Cls_Attendance.GetAttendanceReport((int)Session["interneeid"], Year, Month));
         }
         public ActionResult About()
         {

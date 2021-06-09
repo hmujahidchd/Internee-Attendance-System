@@ -24,8 +24,8 @@
                 @Html.DisplayFor(modelItem => item.usertable.username)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.id }, new { @class = "btn btn-primary" }) &nbsp;&nbsp;
-                @if (item.interneetables.Count() <1)
+                @Html.ActionLink("Dashboard", "index","internee", new { supervisorId = item.id}, new { @class = "btn btn-primary" }) &nbsp;&nbsp;
+                @if (item.interneetables.Count() < 1)
                 {
                     <button class="btn btn-danger" onclick="deleteItem(@item.id)">Delete</button>
                 }
@@ -34,6 +34,7 @@
     }
 
 </table>
+@section scripts{
 <script>
     var website = location.protocol + "//" + window.location.host;
     function deleteItem(id) {

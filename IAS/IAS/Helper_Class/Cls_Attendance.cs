@@ -13,55 +13,80 @@ namespace IAS.Helper_Class
         static List<MonthViewModel> MonthList = new List<MonthViewModel>();
         public static List<MonthViewModel> GetAttendanceDetails(int InterneeId)
         {
-            MonthList.Clear();
-            var attendance = db.attendancetables.ToList().OrderBy(e=>e.reportDatetime).ToList().Where(e => e.interneeid == InterneeId).ToList();
-            if(attendance.Count>0)
+            using(IASDBEntities db = new IASDBEntities())
             {
-                var InitialDateTime = attendance.FirstOrDefault().reportDatetime;
-                var EndDateTime = attendance.LastOrDefault().reportDatetime;
-                if (InitialDateTime.Day != 1)
+                MonthList.Clear();
+                var attendance = db.attendancetables.ToList().OrderBy(e => e.reportDatetime.Date).ToList().Where(e => e.interneeid == InterneeId).ToList();
+                if (attendance.Count > 0)
                 {
-                    InitialDateTime = new DateTime(InitialDateTime.Year, InitialDateTime.Month, 1, 9, 30, 0);
-                    var initialItem = new attendancetable
+                    var InitialDateTime = attendance.FirstOrDefault().reportDatetime;
+                    var EndDateTime = attendance.LastOrDefault().reportDatetime;
+                    if (InitialDateTime.Day != 1)
                     {
-                        interneeid = InterneeId,
-                        reportDatetime = InitialDateTime,
-                        leaveDatetime = InitialDateTime.AddHours(7),
-                        statusid = (int)AttendanceStatus.Absent,
-                    };
-                    attendance.Insert(0, initialItem);
-                }
-                if (EndDateTime.Day != DateTime.DaysInMonth(EndDateTime.Year, EndDateTime.Month))
-                {
-                    EndDateTime = new DateTime(EndDateTime.Year, EndDateTime.Month, DateTime.DaysInMonth(EndDateTime.Year, EndDateTime.Month));
-                    var EndItem = new attendancetable
-                    {
-                        interneeid = InterneeId,
-                        reportDatetime = InitialDateTime,
-                        leaveDatetime = InitialDateTime.AddHours(7),
-                        statusid = (int)AttendanceStatus.Absent,
-                    };
-                    attendance.Add(EndItem);
-                }
-                DateTime PreviousItemDate = attendance.FirstOrDefault().leaveDatetime;
-                foreach (var item in attendance)
-                {
-                    //checking for missing dates
-                    var Difference = item.reportDatetime - PreviousItemDate;
-                    TimeSpan MinDifference = new TimeSpan(1, 0, 0, 0);
-                    if (Difference > MinDifference)
-                    {
-                        for(int day = PreviousItemDate.Day+1; day<item.reportDatetime.Day;day++)
+                        InitialDateTime = new DateTime(InitialDateTime.Year, InitialDateTime.Month, 1, 9, 30, 0);
+                        var initialItem = new attendancetable
                         {
-                            var newItem = new attendancetable();
-                            AddItemToMonthList(item);
-                        }
+                            interneeid = InterneeId,
+                            reportDatetime = InitialDateTime,
+                            leaveDatetime = InitialDateTime.AddHours(7),
+                            statusid = (int)AttendanceStatus.Absent,
+                        };
+                        attendance.Insert(0, initialItem);
                     }
-                    //add item to list
-                    AddItemToMonthList(item);
-                    //update previous datetime
-                    PreviousItemDate = item.leaveDatetime;
+                    if (EndDateTime.Day != DateTime.DaysInMonth(EndDateTime.Year, EndDateTime.Month))
+                    {
+                        EndDateTime = new DateTime(EndDateTime.Year, EndDateTime.Month, DateTime.DaysInMonth(EndDateTime.Year, EndDateTime.Month), 9, 30, 0);
+                        var EndItem = new attendancetable
+                        {
+                            interneeid = InterneeId,
+                            reportDatetime = EndDateTime,
+                            leaveDatetime = EndDateTime.AddHours(7)
+                        };
+                        if (DateTime.Now.Date >= EndItem.reportDatetime.Date)
+                        {
+                            EndItem.statusid = (int)AttendanceStatus.Absent;
+                        }
+                        else
+                        {
+                            EndItem.statusid = (int)AttendanceStatus.Unattempt;
+                        }
+                        attendance.Add(EndItem);
+                    }
+                    DateTime PreviousItemDate = attendance.FirstOrDefault().leaveDatetime;
+                    foreach (var item in attendance)
+                    {
+                        //checking for missing dates
+                        var Difference = item.reportDatetime - PreviousItemDate;
+                        TimeSpan MinDifference = new TimeSpan(1, 0, 0, 0);
+                        if (Difference > MinDifference)
+                        {
+                            for (PreviousItemDate = PreviousItemDate.AddDays(1); PreviousItemDate.Date < item.reportDatetime.Date; PreviousItemDate = PreviousItemDate.AddDays(1))
+                            {
+                                var ReportTime = new DateTime(PreviousItemDate.Year, PreviousItemDate.Month, PreviousItemDate.Day, 9, 30, 0);
+                                var newItem = new attendancetable
+                                {
+                                    interneeid = InterneeId,
+                                    reportDatetime = ReportTime,
+                                    leaveDatetime = ReportTime.AddHours(7)
+                                };
+                                if (DateTime.Now.Date >= item.reportDatetime.Date)
+                                {
+                                    newItem.statusid = (int)AttendanceStatus.Absent;
+                                }
+                                else
+                                {
+                                    newItem.statusid = (int)AttendanceStatus.Unattempt;
+                                }
+                                AddItemToMonthList(newItem);
+                            }
+                        }
+                        //add item to list
+                        AddItemToMonthList(item);
+                        //update previous datetime
+                        PreviousItemDate = item.leaveDatetime;
+                    }
                 }
+
             }
 
             return MonthList;

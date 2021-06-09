@@ -1,0 +1,161 @@
+﻿@model IAS.ViewModel.AttendanceReportModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+
+    @Styles.Render("~/Content/css")
+    <title>@((new DateTime(Model.Month.Year, Model.Month.Month,1)).ToString("MMMM, yyyy"))</title>
+    <style>
+        body {
+            align-items: center;
+        }
+
+        .print-hidden {
+            visibility: hidden;
+        }
+
+        .print-only {
+            visibility: visible;
+        }
+
+        .print-style {
+            color: black;
+            background: #ffffff;
+            margin: 0px;
+            padding: 0px;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        table {
+            border-collapse: collapse;
+        }
+
+        tr {
+            line-height: 10px;
+        }
+    </style>
+</head>
+<body class="print-style">
+    <div class="print-style" style="align-content:center;">
+        <h1 style="text-align:center;">Attendance Sheet</h1>
+        <div class="row">
+            <div class="col-3">
+                <div class="row">
+                    <div class="col" style="min-width:1.5in;">Internee Name</div>
+                    <div class="col">@Model.User.username</div>
+                </div>
+                <div class="row">
+                    <div class="col">Company</div>
+                    <div class="col">NSDevelopers</div>
+                </div>
+                <div class="row" style="margin-top:15px;">
+                    <div class="col">ID#</div>
+                    <div class="col">_______________</div>
+                </div>
+            </div>
+            <div class="col"></div>
+            <div class="col-3">
+                <div class="row">
+                    <div class="col-3">Month</div>
+                    <div class="col">@((new DateTime(Model.Month.Year, Model.Month.Month,1)).ToString("MMMM, yyyy"))</div>
+                </div>
+            </div>
+        </div>
+        <table class="table table-hover print-style" border="1">
+            <tr>
+                <th style="width:fit-content;">Date</th>
+                <th>Day</th>
+                <th>Report</th>
+                <th>Leave</th>
+                <th>Status</th>
+                <th>Remarks</th>
+            </tr>
+            @foreach (var item in Model.Month.AttendanceSheet)
+            {
+                if (item.reportDatetime.DayOfWeek == DayOfWeek.Sunday)
+                {
+                    <tr>
+                        <td>@item.reportDatetime.ToString("dd-MM-yyyy")</td>
+                        <td>@item.reportDatetime.ToString("dddd")</td>
+                        <td colspan="4" style="background:rgb(128, 128, 128, 0.7);"></td>
+                    </tr>
+                }
+                else if (item.statusid == (int)IAS.Helper_Class.Cls_Attendance.AttendanceStatus.Absent)
+                {
+                    <tr class="highlight-red">
+                        <td>@item.reportDatetime.ToString("dd-MM-yyyy")</td>
+                        <td>@item.reportDatetime.ToString("dddd")</td>
+                        <td colspan="4" style="text-align:center;">@(IAS.Helper_Class.Cls_Attendance.StatusString(item.statusid))</td>
+                    </tr>
+                }
+                else if (item.statusid == (int)IAS.Helper_Class.Cls_Attendance.AttendanceStatus.Leave)
+                {
+                    <tr class="highlight-red">
+                        <td>@item.reportDatetime.ToString("dd-MM-yyyy")</td>
+                        <td>@item.reportDatetime.ToString("dddd")</td>
+                        <td colspan="4" style="text-align:center;">@(IAS.Helper_Class.Cls_Attendance.StatusString(item.statusid))</td>
+                    </tr>
+                }
+                else if (item.statusid == (int)IAS.Helper_Class.Cls_Attendance.AttendanceStatus.Public_Holiday)
+                {
+                    <tr>
+                        <td>@item.reportDatetime.ToString("dd-MM-yyyy")</td>
+                        <td>@item.reportDatetime.ToString("dddd")</td>
+                        <td colspan="4" style="background:rgb(128 128 128); text-align:center;">@(IAS.Helper_Class.Cls_Attendance.StatusString(item.statusid))</td>
+                    </tr>
+                }
+                else if (item.statusid == (int)IAS.Helper_Class.Cls_Attendance.AttendanceStatus.Present)
+                {
+                    <tr>
+                        <td>@item.reportDatetime.ToString("dd-MM-yyyy")</td>
+                        <td>@item.reportDatetime.ToString("dddd")</td>
+                        <td>@item.reportDatetime.ToString("hh:mm tt")</td>
+                        <td>@item.leaveDatetime.ToString("hh:mm tt")</td>
+                        <td>@(IAS.Helper_Class.Cls_Attendance.StatusString(item.statusid))</td>
+                        <td>KPITB</td>
+                    </tr>
+                }
+                else if (item.statusid == (int)IAS.Helper_Class.Cls_Attendance.AttendanceStatus.Unattempt)
+                {
+                    <tr>
+                        <td>@item.reportDatetime.ToString("dd-MM-yyyy")</td>
+                        <td>@item.reportDatetime.ToString("dddd")</td>
+                        <td></td>
+                        <td></td>
+                        <td>@(IAS.Helper_Class.Cls_Attendance.StatusString(item.statusid))</td>
+                        <td></td>
+                    </tr>
+                }
+            }
+        </table>
+        <div class="row" style="margin-top:20px;">
+            <div class="col-3">
+                <div class="row">
+                    <div class="col">Supervisor</div>
+                    <div class="col">@Model.Supervisor.username</div>
+                </div>
+            </div>
+            <div class="col"></div>
+            <div class="col-4">
+                <div class="row">
+                    <div class="col" style="min-width:1.5in;">Supervisor Sign</div>
+                    <div class="col">_______________</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @Scripts.Render("~/bundles/bootstrap")
+</bodyclass="print-style">
+</html>

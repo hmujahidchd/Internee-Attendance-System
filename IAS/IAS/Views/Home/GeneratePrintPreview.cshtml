@@ -1,0 +1,117 @@
+﻿@model IAS.ViewModel.AttendanceReportModel
+@{
+    ViewBag.Title = "Attendance Sheet";
+}
+<div class="print-style" style="align-content:center;">
+    <button class="btn btn-primary print-hidden" style="float:right;" onclick="window.print();">Print</button>
+    <h1 style="text-align:center;">Attendance Sheet</h1>
+    <div class="row">
+        <div class="col-3">
+            <div class="row">
+                <div class="col" style="min-width:1.5in;">Internee Name</div>
+                <div class="col">@Model.User.username</div>
+            </div>
+            <div class="row">
+                <div class="col">Company</div>
+                <div class="col">NSDevelopers</div>
+            </div>
+            <div class="row" style="margin-top:15px;">
+                <div class="col">ID#</div>
+                <div class="col">_______________</div>
+            </div>
+        </div>
+        <div class="col"></div>
+        <div class="col-3">
+            <div class="row">
+                <div class="col-3">Month</div>
+                <div class="col">@((new DateTime(Model.Month.Year, Model.Month.Month,1)).ToString("MMMM, yyyy"))</div>
+            </div>
+        </div>
+    </div>
+    <table class="table table-hover print-style" border="1">
+        <tr>
+            <th style="width:fit-content;">Date</th>
+            <th>Day</th>
+            <th>Report</th>
+            <th>Leave</th>
+            <th>Status</th>
+            <th>Remarks</th>
+        </tr>
+        @foreach (var item in Model.Month.AttendanceSheet)
+        {
+            if (item.reportDatetime.DayOfWeek == DayOfWeek.Sunday)
+            {
+                <tr>
+                    <td>@item.reportDatetime.ToString("dd-MM-yyyy")</td>
+                    <td>@item.reportDatetime.ToString("dddd")</td>
+                    <td colspan="4" style="background:rgb(128, 128, 128, 0.7);"></td>
+                </tr>
+            }
+            else if (item.statusid == (int)IAS.Helper_Class.Cls_Attendance.AttendanceStatus.Absent)
+            {
+                <tr class="highlight-red">
+                    <td>@item.reportDatetime.ToString("dd-MM-yyyy")</td>
+                    <td>@item.reportDatetime.ToString("dddd")</td>
+                    <td colspan="4" style="text-align:center;">@(IAS.Helper_Class.Cls_Attendance.StatusString(item.statusid))</td>
+                </tr>
+            }
+            else if (item.statusid == (int)IAS.Helper_Class.Cls_Attendance.AttendanceStatus.Leave)
+            {
+                <tr class="highlight-red">
+                    <td>@item.reportDatetime.ToString("dd-MM-yyyy")</td>
+                    <td>@item.reportDatetime.ToString("dddd")</td>
+                    <td colspan="4" style="text-align:center;">@(IAS.Helper_Class.Cls_Attendance.StatusString(item.statusid))</td>
+                </tr>
+            }
+            else if (item.statusid == (int)IAS.Helper_Class.Cls_Attendance.AttendanceStatus.Public_Holiday)
+            {
+                <tr>
+                    <td>@item.reportDatetime.ToString("dd-MM-yyyy")</td>
+                    <td>@item.reportDatetime.ToString("dddd")</td>
+                    <td colspan="4" style="background:rgb(128 128 128); text-align:center;">@(IAS.Helper_Class.Cls_Attendance.StatusString(item.statusid))</td>
+                </tr>
+            }
+            else if (item.statusid == (int)IAS.Helper_Class.Cls_Attendance.AttendanceStatus.Present)
+            {
+                <tr>
+                    <td>@item.reportDatetime.ToString("dd-MM-yyyy")</td>
+                    <td>@item.reportDatetime.ToString("dddd")</td>
+                    <td>@item.reportDatetime.ToString("hh:mm tt")</td>
+                    <td>@item.leaveDatetime.ToString("hh:mm tt")</td>
+                    <td>@(IAS.Helper_Class.Cls_Attendance.StatusString(item.statusid))</td>
+                    <td>KPITB</td>
+                </tr>
+            }
+
+            else if (item.statusid == (int)IAS.Helper_Class.Cls_Attendance.AttendanceStatus.Unattempt)
+            {
+                <tr>
+                    <td>@item.reportDatetime.ToString("dd-MM-yyyy")</td>
+                    <td>@item.reportDatetime.ToString("dddd")</td>
+                    <td></td>
+                    <td></td>
+                    <td>@(IAS.Helper_Class.Cls_Attendance.StatusString(item.statusid))</td>
+                    <td></td>
+                </tr>
+            }
+        }
+    </table>
+    <div class="row" style="margin-top:20px;">
+        <div class="col-3">
+            <div class="row">
+                <div class="col">Supervisor</div>
+                <div class="col">@Model.Supervisor.username</div>
+            </div>
+        </div>
+        <div class="col"></div>
+        <div class="col-4">
+            <div class="row">
+                <div class="col" style="min-width:1.5in;">Supervisor Sign</div>
+                <div class="col">_______________</div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    window.print();
+</script>

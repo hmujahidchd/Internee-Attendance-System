@@ -1,34 +1,68 @@
-﻿@model List<IAS.ViewModel.MonthViewModel>
+﻿@model IAS.ViewModel.DashboardViewModel
 @{
     ViewBag.Title = "Home Page";
 }
 
 <div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+    <div class="row">
+        <div class="col-sm">
+            <div class="row">
+                <div class="col">Name</div>
+                <div class="col">@Model.User.username</div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+        </div>
+        <div class="col-sm">
+            <div class="row">
+                <div class="col">CNIC</div>
+                <div class="col">@Model.User.cnic</div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+        </div>
+        <div class="col-sm">
+            <div class="row">
+                <div class="col">Supervisor</div>
+                <div class="col">@Model.Supervisor.username</div>
+            </div>
+        </div>
+    </div>
 </div>
 <div class="row">
     <div class="col-md-4 mb-3 text-center text-white bg-transparent">
-        <div class="card card-body bg-primary" style="height:40px;padding:10px;">
-            Thursday
+        <div class="card card-body bg-default" id="previousattendancecontainer" style="height:50px;padding:10px;">
+            <div class="recent-attendance-status">
+                <div class="recent-attendance-day" id="previousattendancelabel">@DateTime.Now.AddDays(-2).ToString("dddd")</div>
+                <div class="recent-attendance"><div class="unattempt" id="previousattendancestatus">!</div></div>
+            </div>
         </div>
     </div>
     <div class="col-md-4 mb-3 text-center text-white bg-transparent">
-        <div class="card card-body bg-danger" style="height:40px;padding:10px;">
-            Yesterday
+        <div class="card card-body bg-default" id="yesterdayattendancecontainer" style="height:50px;padding:10px;">
+            <div class="recent-attendance-status">
+                <div class="recent-attendance-day" id="yesterdayattendancelabel">Yesterday</div>
+                <div class="recent-attendance"><div class="unattempt" id="yesterdayattendancestatus">!</div></div>
+            </div>
         </div>
     </div>
     <div class="col-md-4 mb-3 text-center text-white bg-transparent">
-        <div class="card card-body bg-dark" style="height:40px;padding:10px;">
-            Today
+        <div class="card card-body bg-default" id="todayattendancecontainer" style="height:50px;padding:10px;">
+            <div class="recent-attendance-status">
+                <div class="recent-attendance-day" id="todayattendancelabel">Today</div>
+                <div class="recent-attendance"><div class="unattempt" id="todayattendancestatus">!</div></div>
+            </div>
         </div>
     </div>
 </div>
 <div class="row">
-    @foreach(var item in Model)
+    @if (Model.Attendance.Count() == 0)
     {
-        var date = new DateTime(item.Year,item.Month,1);
+        <div style="width:100%; text-align:center;">No record found.</div>
+    }
+    @foreach (var item in Model.Attendance)
+    {
+        var date = new DateTime(item.Year, item.Month, 1);
         <div class="col-md-4" style="margin-bottom:10px;">
             <div class="card text-center">
                 <div class="card-header">
@@ -39,8 +73,7 @@
                         <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar"
                              aria-valuenow="75" aria-valuemin="0" aria-valuemax="100" style="width: 55%"></div>
                     </div>
-                    <h4 class="card-title">Special title treatment</h4>
-                    
+
                     <div class="detail-row"><div class="detail-title">Present</div><div class="detail-value">@item.Present days</div></div>
                     <div class="detail-row highlight-red"><div class="detail-title">Absent</div> <div class="detail-value">@item.Absent days</div></div>
                     <div class="detail-row"><div class="detail-title">Total</div>  <div class="detail-value">@item.TotalWorkingDays days</div></div>
@@ -52,3 +85,362 @@
         </div>
     }
 </div>
+
+@section scripts{
+    @if (Model.Attendance.Count() != 0)
+    {
+        <script>
+        $(document).ready(
+            function () {
+                var website = location.protocol + '//' + location.host;
+                console.log(website);
+                var weekday = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+                function IsWeekend(date) {
+                    if (date.getDay() == 0)
+                        return true;
+                    else
+                        return false;
+                };
+
+                //GetTodayAttendance
+                var date = new Date();
+                while (IsWeekend(date)) {
+                    date.setDate(date.getDate() - 1);
+                    $("#todayattendancelabel").html(weekday[date.getDay()]);
+                }
+                var FormatedDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + "%20" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+                $.ajax({
+                    type: "GET",
+                    url: website + "/api/attendance?interneeid=" +@((int)Session["interneeid"])+"&" + "date=" + FormatedDate,
+                    }).done(function (data, textStatus, xhr) {
+                        // TO DO ON DONE
+                       if (data.statusid == 1)
+                       {
+                           $("#todayattendancecontainer").removeClass("bg-default").removeClass("bg-primary").addClass("bg-danger");
+                           $("#todayattendancestatus").removeClass("unattempt").removeClass("check").addClass("cross").html("");
+                       }
+                       else if (data.statusid == 2) {
+                           $("#todayattendancecontainer").removeClass("bg-default").removeClass("bg-danger").addClass("bg-primary");
+                           $("#todayattendancestatus").removeClass("unattempt").removeClass("cross").addClass("check").html("");
+                       }
+                       else if (data.statusid == 3) {
+                           $("#todayattendancecontainer").removeClass("bg-danger").removeClass("bg-primary").addClass("bg-default");
+                           $("#todayattendancestatus").removeClass("unattempt").removeClass("check").remove("cross").html("Holiday");
+                       }
+                       else if (data.statusid == 4) {
+                           $("#todayattendancecontainer").removeClass("bg-danger").removeClass("bg-primary").addClass("bg-default");
+                           $("#todayattendancestatus").removeClass("unattempt").removeClass("check").remove("cross").html("Leave");
+                       }
+                    }).fail(function (data, textStatus, xhr) {
+                        //This shows status code eg. 403
+                        console.log("error", data.status);
+                        if (data.status == 404) {
+                            $("#todayattendancecontainer").removeClass("bg-danger").removeClass("bg-primary").addClass("bg-default");
+                            $("#todayattendancestatus").removeClass("cross").removeClass("check").addClass("unattempt").html("!");
+                            $("#todayattendancecontainer").click();
+                        }
+
+                    }).always(function () {
+                        //TO-DO after fail/done request.
+                        console.log("ended");
+                    });
+
+                //get yesterday Attendance
+                date.setDate(date.getDate() - 1);
+
+                while (IsWeekend(date)) {
+                    date.setDate(date.getDate() - 1);
+                }
+                $("#yesterdayattendancelabel").html(weekday[date.getDay()]);
+                var FormatedDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + "%20" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+                $.ajax({
+                    type: "GET",
+                    url: website + "/api/attendance?interneeid=" +@((int)Session["interneeid"])+"&" + "date=" + FormatedDate,
+                    }).done(function (data, textStatus, xhr) {
+                        // TO DO ON DONE
+                       if (data.statusid == 1)
+                       {
+                           $("#yesterdayattendancecontainer").removeClass("bg-default").removeClass("bg-primary").addClass("bg-danger");
+                           $("#yesterdayattendancestatus").removeClass("unattempt").removeClass("check").addClass("cross").html("");
+                       }
+                       else if (data.statusid == 2) {
+                           $("#yesterdayattendancecontainer").removeClass("bg-default").removeClass("bg-danger").addClass("bg-primary");
+                           $("#yesterdayattendancestatus").removeClass("unattempt").removeClass("cross").addClass("check").html("");
+                       }
+                       else if (data.statusid == 3) {
+                           $("#yesterdayattendancecontainer").removeClass("bg-danger").removeClass("bg-primary").addClass("bg-default");
+                           $("#yesterdayattendancestatus").removeClass("unattempt").removeClass("check").removeClass("cross").html("Holiday");
+                       }
+                       else if (data.statusid == 4) {
+                           $("#yesterdayattendancecontainer").removeClass("bg-danger").removeClass("bg-primary").addClass("bg-default");
+                           $("#yesterdayattendancestatus").removeClass("unattempt").removeClass("check").removeClass("cross").html("Leave");
+                       }
+                    }).fail(function (data, textStatus, xhr) {
+                        //This shows status code eg. 403
+                        console.log("error", data.status);
+                        if (data.status == 404) {
+                            $("#yesterdayattendancecontainer").removeClass("bg-default").removeClass("bg-primary").addClass("bg-danger");
+                            $("#yesterdayattendancestatus").removeClass("unattempt").removeClass("check").addClass("cross").html("");
+                        }
+
+                    }).always(function () {
+                        //TO-DO after fail/done request.
+                        console.log("ended");
+                    });
+                //get onedaybefore yesterday
+                date.setDate(date.getDate() - 1);
+
+                while (IsWeekend(date)) {
+                    date.setDate(date.getDate() - 1);
+                }
+                $("#previousattendancelabel").html(weekday[date.getDay()]);
+                var FormatedDate = date.getFullYear() + "-" + (date.getMonth()+1) + "-" + date.getDate() + "%20" + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+                $.ajax({
+                    type: "GET",
+                    url: website + "/api/attendance?interneeid=" +@((int)Session["interneeid"])+"&" + "date=" + FormatedDate,
+                    }).done(function (data, textStatus, xhr) {
+                        // TO DO ON DONE
+                       if (data.statusid == 1)
+                       {
+                           $("#previousattendancecontainer").removeClass("bg-default").removeClass("bg-primary").addClass("bg-danger");
+                           $("#previousattendancestatus").removeClass("unattempt").removeClass("check").addClass("cross").html("");
+                       }
+                       else if (data.statusid == 2) {
+                           $("#previousattendancecontainer").removeClass("bg-default").removeClass("bg-danger").addClass("bg-primary");
+                           $("#previousattendancestatus").removeClass("unattempt").removeClass("cross").addClass("check").html("");
+                       }
+                       else if (data.statusid == 3) {
+                           $("#previousattendancecontainer").removeClass("bg-danger").removeClass("bg-primary").addClass("bg-default");
+                           $("#previousattendancestatus").removeClass("unattempt").removeClass("check").removeClass("cross").html("Holiday");
+                       }
+                       else if (data.statusid == 4) {
+                           $("#previousattendancecontainer").removeClass("bg-danger").removeClass("bg-primary").addClass("bg-default");
+                           $("#previousattendancestatus").removeClass("unattempt").removeClass("check").removeClass("cross").html("Leave");
+                       }
+                    }).fail(function (data, textStatus, xhr) {
+                        //This shows status code eg. 403
+                        console.log("error", data.status);
+                        if (data.status == 404) {
+                            $("#previousattendancecontainer").removeClass("bg-default").removeClass("bg-primary").addClass("bg-danger");
+                            $("#previousattendancestatus").removeClass("unattempt").removeClass("check").addClass("cross").html("");
+                        }
+
+                    }).always(function () {
+                        //TO-DO after fail/done request.
+                        console.log("ended");
+                });
+            });
+        </script>
+    }
+        @if (Session["managerid"] != null || Session["supervisorid"] != null)
+        {
+            <script>
+    var website = location.protocol + '//' + location.host;
+            $("#todayattendancecontainer").click(function () {
+                var dialog = bootbox.dialog({
+                    title: 'Attendance',
+                    message: "<p>@Model.User.username at office today?.</p>",
+                    size: 'large',
+                    buttons: {
+                        Present: {
+                            label: "Present",
+                            className: 'btn-success',
+                            callback: function () {
+                                MarkAttendance(2);
+                            }
+                        },
+                        Absent: {
+                            label: "Absent",
+                            className: 'btn-warning',
+                            callback: function () {
+                                MarkAttendance(1);
+                            }
+                        },
+                        Leave: {
+                            label: "Leave",
+                            className: 'btn-info',
+                            callback: function () {
+                                MarkAttendance(4);
+                            }
+                        },
+                        Holiday: {
+                            label: "Holiday",
+                            className: 'btn-default',
+                            callback: function () {
+                                MarkAttendance(3);
+                            }
+                        }
+                    }
+                });
+            });
+
+            //mark attendance
+                function MarkAttendance(id)
+                {
+                    var dialog = bootbox.dialog({
+                        title: 'Please wait',
+                        message: '<p><i class="fa fa-spin fa-spinner"></i> Saving..</p>'
+                    });
+                    var Data = new Object();
+                    Data.interneeid = @((int)Session["interneeid"]);
+                    Data.statusid = id;
+                    Data.reportDatetime = new Date();
+                    $.ajax({
+                        type: "POST",
+                        data: JSON.stringify(Data),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        url: website + "/api/attendance",
+                    }).done(function (data, textStatus, xhr) {
+                        // TO DO ON DONE
+                        console.log(data);
+                        // TO DO ON DONE
+                        if (data.statusid == 1) {
+                            $("#todayattendancecontainer").removeClass("bg-default").removeClass("bg-primary").addClass("bg-danger");
+                            $("#todayattendancestatus").removeClass("unattempt").removeClass("check").addClass("cross").html("");
+                        }
+                        else if (data.statusid == 2) {
+                            $("#todayattendancecontainer").removeClass("bg-default").removeClass("bg-danger").addClass("bg-primary");
+                            $("#todayattendancestatus").removeClass("unattempt").removeClass("cross").addClass("check").html("");
+                        }
+                        else if (data.statusid == 3) {
+                            $("#todayattendancecontainer").removeClass("bg-danger").removeClass("bg-primary").addClass("bg-default");
+                            $("#todayattendancestatus").removeClass("unattempt").removeClass("check").remove("cross").html("Holiday");
+                        }
+                        else if (data.statusid == 4) {
+                            $("#todayattendancecontainer").removeClass("bg-danger").removeClass("bg-primary").addClass("bg-default");
+                            $("#todayattendancestatus").removeClass("unattempt").removeClass("check").remove("cross").html("Leave");
+                        }
+                    }).fail(function (data, textStatus, xhr) {
+                        //This shows status code eg. 403
+                        console.log("error", data.status);
+
+                        bootbox.confirm({
+                            message: "Sorry cannot cannot communicate with server. Reload this page may solve this issue. If this issue again and again, Please contact manager.<br/> Do you like to reload page?",
+                            buttons: {
+                                confirm: {
+                                    label: 'Yes',
+                                    className: 'btn-success'
+                                },
+                                cancel: {
+                                    label: 'No',
+                                    className: 'btn-danger'
+                                }
+                            },
+                            callback: function (result) {
+                                if (result) {
+                                    location.reload();
+                                }
+                            }
+                        });
+                    }).always(function () {
+                        //TO-DO after fail/done request.
+                        dialog.init(function () {
+                            setTimeout(function () {
+                                location.reload();
+                            }, 3000);
+                        });
+                        console.log("ended");
+                    });
+                };
+            </script>
+        }
+        else
+        {
+            <script>
+    var website = location.protocol + '//' + location.host;
+            $("#todayattendancecontainer").click(function () {
+                var dialog = bootbox.dialog({
+                    title: 'Attendance',
+                    message: "<p>Are you at office today?.</p>",
+                    size: 'large',
+                    buttons: {
+                        Present: {
+                            label: "Present",
+                            className: 'btn-success',
+                            callback: function () {
+                                MarkAttendance(2);
+                            }
+                        },
+                        Absent: {
+                            label: "Absent",
+                            className: 'btn-warning',
+                            callback: function () {
+                                MarkAttendance(1);
+                            }
+                        }
+                    }
+                });
+            });
+            //mark attendance
+                function MarkAttendance(id)
+                {
+                    var dialog = bootbox.dialog({
+                        title: 'Please wait',
+                        message: '<p><i class="fa fa-spin fa-spinner"></i> Saving..</p>'
+                    });
+                    var Data = new Object();
+                    Data.interneeid = @((int)Session["interneeid"]);
+                    Data.statusid = id;
+                    Data.reportDatetime = new Date();
+                    $.ajax({
+                        type: "POST",
+                        data: JSON.stringify(Data),
+                        contentType: "application/json; charset=utf-8",
+                        dataType: "json",
+                        url: website + "/api/attendance",
+                    }).done(function (data, textStatus, xhr) {
+                        // TO DO ON DONE
+                        console.log(data);
+                        // TO DO ON DONE
+                        if (data.statusid == 1) {
+                            $("#todayattendancecontainer").removeClass("bg-default").removeClass("bg-primary").addClass("bg-danger");
+                            $("#todayattendancestatus").removeClass("unattempt").removeClass("check").addClass("cross").html("");
+                        }
+                        else if (data.statusid == 2) {
+                            $("#todayattendancecontainer").removeClass("bg-default").removeClass("bg-danger").addClass("bg-primary");
+                            $("#todayattendancestatus").removeClass("unattempt").removeClass("cross").addClass("check").html("");
+                        }
+                        else if (data.statusid == 3) {
+                            $("#todayattendancecontainer").removeClass("bg-danger").removeClass("bg-primary").addClass("bg-default");
+                            $("#todayattendancestatus").removeClass("unattempt").removeClass("check").remove("cross").html("Holiday");
+                        }
+                        else if (data.statusid == 4) {
+                            $("#todayattendancecontainer").removeClass("bg-danger").removeClass("bg-primary").addClass("bg-default");
+                            $("#todayattendancestatus").removeClass("unattempt").removeClass("check").remove("cross").html("Leave");
+                        }
+                    }).fail(function (data, textStatus, xhr) {
+                        //This shows status code eg. 403
+                        console.log("error", data.status);
+
+                        bootbox.confirm({
+                            message: "Sorry cannot cannot communicate with server. Reload this page may solve this issue. If this issue again and again, Please contact manager.<br/> Do you like to reload page?",
+                            buttons: {
+                                confirm: {
+                                    label: 'Yes',
+                                    className: 'btn-success'
+                                },
+                                cancel: {
+                                    label: 'No',
+                                    className: 'btn-danger'
+                                }
+                            },
+                            callback: function (result) {
+                                if (result) {
+                                    location.reload();
+                                }
+                            }
+                        });
+                    }).always(function () {
+                        //TO-DO after fail/done request.
+                        dialog.init(function () {
+                            setTimeout(function () {
+                                location.reload();
+                            }, 3000);
+                        });
+                        console.log("ended");
+                    });
+                };
+            </script>
+        }
+    }

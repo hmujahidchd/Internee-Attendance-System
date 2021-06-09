@@ -10,9 +10,9 @@
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link rel='stylesheet' href='//cdn.jsdelivr.net/font-hack/2.020/css/hack.min.css'>
 </head>
-<body>
+<body class="page-body print-style">
 
-    <div class="navbar-dark text-white">
+    <div class="navbar-dark text-white print-hidden">
         <div class="container">
             <nav class="navbar px-0 navbar-expand-lg navbar-dark">
                 <span class="ht-tm-navbar-title" style="float:left;">
@@ -51,10 +51,10 @@
         </div>
     </div>
 
-    <div class="container body-content">
+    <div class="container body-content print-style">
         @RenderBody()
-        <hr />
-        <footer>
+        <hr class="print-hidden"/>
+        <footer class="print-hidden">
             <p style="text-align:center;">&copy; @DateTime.Now.Year - NSDevelopers</p>
         </footer>
     </div>

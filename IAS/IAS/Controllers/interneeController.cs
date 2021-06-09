@@ -16,11 +16,20 @@ namespace IAS.Controllers
         private IASDBEntities db = new IASDBEntities();
 
         // GET: internee
-        public ActionResult Index()
+        public ActionResult Index(int supervisorId=0)
         {
-            if (Session["managerid"] != null || Session["supervisor"] != null)
+            if (Session["managerid"] != null || Session["supervisorid"] != null)
             {
-                var interneetables = db.interneetables.Include(i => i.batchtable).Include(i => i.supervisortable).Include(i => i.usertable);
+                if (supervisorId != 0)
+                {
+                    Session["supervisorid"] = supervisorId;
+                }
+
+                var interneetables = db.interneetables.Include(i => i.batchtable).Include(i => i.supervisortable).Include(i => i.usertable).ToList();
+                if(Session["supervisorid"] != null)
+                {
+                    interneetables = interneetables.Where(e=>e.supervisorid == (int)Session["supervisorid"]).ToList();
+                }
                 return View(interneetables.ToList());
             }
             else

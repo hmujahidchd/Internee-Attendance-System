@@ -26,3 +26,110 @@
     font-weight: 400;
     background-color: rgba(255,46,46,0.25);
 }
+
+.recent-attendance-status {
+    font-size: 20px;
+    display: block;
+    align-items: center;
+    padding: 0px 10px 0px 10px;
+}
+
+.recent-attendance-day {
+    float: left;
+}
+
+.recent-attendance {
+    padding-right: 25px;
+    float: right;
+}
+.check {
+    display: inline-block;
+    transform: rotate(45deg);
+    height: 25px;
+    width: 12px;
+    margin-left: 60%;
+    border-bottom: 4px solid #ffffff;
+    border-right: 4px solid #ffffff;
+}
+
+.cross {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+}
+
+.cross:before, .cross:after {
+    position: absolute;
+    left: 15px;
+    content: ' ';
+    height: 33px;
+    width: 3px;
+    background-color: #ffffff;
+}
+
+.cross:before {
+    transform: rotate(45deg);
+}
+
+.cross:after {
+    transform: rotate(-45deg);
+}
+.unattempt{
+    color:white;
+    font-size:18pt;
+    font-display:block;
+}
+.avoid-clicks {
+    pointer-events: none;
+}
+.print-only {
+    visibility: hidden;
+}
+@media print {
+    @page {
+        size: A4;
+        size: portrait;
+        margin: 2.5cm 1cm 2.3cm 1.5cm;
+    }
+    .page-body {
+        align-items:center;
+    }
+    .print-hidden {
+        visibility:hidden;
+    }
+    .print-only {
+        visibility:visible;
+    }
+    .print-style{
+        color:black;
+        background:#ffffff;
+        margin:0px;
+        padding:0px;
+    }
+    table, th, td {
+        border: 1px solid black;
+    }
+    table {
+        border-collapse: collapse;
+    }
+    tr {
+        line-height: 10px;
+    }
+}
+
+@media (max-width: 1600px) and (min-width:1207px) {
+    .restrict-to-40 {
+        max-width: 40%;
+    }
+}
+@media (min-width:568px) and (max-width: 763px) {
+    .restrict-to-40 {
+        width: 100%;
+    }
+}
+@media (min-width:768px) and (max-width: 990px) {
+
+    #piechartContainer {
+        overflow: hidden;
+    }
+}
